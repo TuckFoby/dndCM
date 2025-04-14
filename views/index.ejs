@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/indexStyle.css">
+</head>
+<body>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <h1>Welcome, <%- name %></h1>
+    <header>
+        <form class="logo" action="/" method="GET">
+            <button type="submit">
+                <img src="images/tobyco-logo-4.png" alt="Logo" style="width: 200px; height: 200px;">
+            </button>
+        </form>
+        <nav class="navigation">
+            <form id="falloutCM-button" action="/falloutCM" method="GET">
+                <button type="submit">Fallout Character Manager</button>
+            </form>
+            <form id="falloutGuide-button" action="/falloutGuide" method="GET">
+                <button type="submit">Website Guide</button>
+            </form>
+            <form id="dndCM-button" action="/dndCM" method="GET">
+                <button type="submit">DND Character Manager</button>
+            </form>
+            <form id="dndAdmin-button" action="/dndAdmin" method="GET">
+                <button type="submit">DND Admin Panel</button>
+            </form>
+            <form id="logout-button" action="/logout" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit">Log Out</button>
+            </form>
+        </nav>
+    </header>
+</body>

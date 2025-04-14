@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D&D Character Sheet</title>
+  <!--<link rel="stylesheet" href="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCM.css">-->
+  <link rel="stylesheet" href="\dndCMStyle.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Character Info -->
+    <div class="section">
+      <h1>Character Sheet</h1>
+      <label>Name: <input type="text" name="characterName" value="Elaria Moonshadow"></label>
+      <label>Level: <input type="number" name="level" value="5"></label>
+      <label>XP: <input type="number" name="xp" value="6500"></label>
+      <label>XP to Next Level: <input type="number" name="xpToNext" value="14000"></label>
+      <label>Race: <input type="text" name="race" value="Half-Elf"></label>
+    </div>
+
+    <!-- Attributes -->
+    <div class="section">
+      <h2>Attributes</h2>
+      <div class="flex-wrap">
+        <div class="box"><label>Strength: <input type="number" name="strength" value="10"></label></div>
+        <div class="box"><label>Dexterity: <input type="number" name="dexterity" value="16"></label></div>
+        <div class="box"><label>Constitution: <input type="number" name="constitution" value="14"></label></div>
+        <div class="box"><label>Intelligence: <input type="number" name="intelligence" value="12"></label></div>
+        <div class="box"><label>Wisdom: <input type="number" name="wisdom" value="13"></label></div>
+        <div class="box"><label>Charisma: <input type="number" name="charisma" value="18"></label></div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="section">
+      <h2>Skills</h2>
+      <div class="flex-wrap">
+        <div class="box">Acrobatics (Dex): +<span id="acrobaticsMod">0</span> <input type="checkbox" name="acrobaticsProf"> ✔️</div>
+        <div class="box">Arcana (Int): +<span id="arcanaMod">0</span> <input type="checkbox" name="arcanaProf"></div>
+        <div class="box">Persuasion (Cha): +<span id="persuasionMod">0</span> <input type="checkbox" name="persuasionProf"> ✔️</div>
+        <div class="box">Stealth (Dex): +<span id="stealthMod">0</span> <input type="checkbox" name="stealthProf"></div>
+      </div>
+    </div>
+
+    <!-- Combat Stats -->
+    <div class="section">
+      <h2>Combat Stats</h2>
+      <div class="flex-wrap">
+        <div class="box">
+          <h3>Hit Points</h3>
+          <label>Current: <input type="number" name="currentHP" value="28"></label><br>
+          <label>Max: <input type="number" name="maxHP" value="35"></label>
+        </div>
+        <div class="box">
+          <h3>Armor Class</h3>
+          <input type="number" name="ac" value="15">
+        </div>
+        <div class="box">
+          <h3>Initiative</h3>
+          <input type="number" name="initiative" value="3">
+        </div>
+      </div>
+    </div>
+
+    <!-- Defenses -->
+    <div class="section">
+      <h2>Defenses</h2>
+      <div class="flex-wrap">
+        <div class="box"><label>Resistances:<br><input type="text" name="resistances" value="Fire"></label></div>
+        <div class="box"><label>Immunities:<br><input type="text" name="immunities" value="Poison"></label></div>
+        <div class="box"><label>Vulnerabilities:<br><input type="text" name="vulnerabilities" value="Radiant"></label></div>
+      </div>
+    </div>
+
+    <!-- Conditions -->
+    <div class="section">
+      <h2>Active Conditions</h2>
+      <textarea name="conditions" rows="3" style="width:100%;" placeholder="E.g., Frightened, Grappled, Blessed">Blessed, Concentrating on Detect Magic</textarea>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-menu">
+      <button class="tab-button active" onclick="switchTab('actions')">ACTIONS</button>
+      <button class="tab-button" onclick="switchTab('spells')">SPELLS</button>
+      <button class="tab-button" onclick="switchTab('inventory')">INVENTORY</button>
+      <button class="tab-button" onclick="switchTab('features')">FEATURES & TRAITS</button>
+      <button class="tab-button" onclick="switchTab('background')">BACKGROUND</button>
+      <button class="tab-button" onclick="switchTab('notes')">NOTES</button>
+      <button class="tab-button" onclick="switchTab('extras')">EXTRAS</button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="actions" class="tab-content active">
+      <h2>Actions</h2>
+      <p>Attacks per Action: 1</p>
+    </div>
+
+    <div id="spells" class="tab-content">
+      <h2>Spells</h2>
+      <p>Your spellbook goes here.</p>
+    </div>
+
+    <div id="inventory" class="tab-content">
+      <h2>Inventory</h2>
+      <p>Equipment, weapons, tools, and treasures.</p>
+      <button onclick="openSearchModal()">Add Item to Inventory</button>
+    </div>    
+    
+    <div id="features" class="tab-content">
+      <h2>Features & Traits</h2>
+      <p>Class and racial features, feats, etc.</p>
+    </div>
+
+    <div id="background" class="tab-content">
+      <h2>Background</h2>
+      <p>Your character’s story and background traits.</p>
+    </div>
+
+    <div id="notes" class="tab-content">
+      <h2>Notes</h2>
+      <p>Player or DM notes, session details, reminders.</p>
+    </div>
+
+    <div id="extras" class="tab-content">
+      <h2>Extras</h2>
+      <p>Custom sections, mounts, companions, etc.</p>
+    </div>
+
+  </div>
+
+<!-- Item Search Modal -->
+<div id="searchModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeSearchModal()">&times;</span>
+    <h3>Search Magic Item</h3>
+    <form id="searchForm">
+      <label>Item Name:<br>
+        <input type="text" name="searchQuery" required>
+      </label><br><br>
+      <button type="submit">Search</button>
+    </form>
+
+    <div id="searchResults" style="margin-top: 20px;"></div>
+  </div>
+</div>
+<!--<script src="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCM.js"></script>-->
+<script src="\dndCMScripts.js"></script>
+</body>
+</html>

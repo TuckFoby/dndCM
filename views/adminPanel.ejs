@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Magic Item</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    form { max-width: 400px; margin: auto; }
+    label { display: block; margin-top: 10px; }
+    input, textarea { width: 100%; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Add a Magic Item</h1>
+  <form method="POST" action="/add-item">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>
+      Name:
+      <input type="text" name="name" required>
+    </label>
+    <label>
+      Description:
+      <textarea name="description"></textarea>
+    </label>
+    <label>
+      Rarity:
+      <input type="text" name="rarity">
+    </label>
+    <label>
+      <input type="checkbox" name="attunement_required"> Requires Attunement
+    </label>
+    <button type="submit">Add Item</button>
+  </form>
+</body>
+</html>
