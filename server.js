@@ -290,6 +290,26 @@ app.post('/saveStats', checkAuthenticated, async (req, res) => {
     }
 });
 
+app.post('saveStatsDND', checkAuthenticated, async(req, res)=>{
+    console.log(req.headers['_csrf'])
+    const stats = req.body.stats;
+    const userID = req.user.userID;
+    if (!userID) {
+        return res.status(400).json({ message: 'Invalid user ID' });
+    }
+    try {
+        const result = await UserStatsDND.findOneAndUpdate(
+            { userID: userID },
+            { name: req.user.name, stats: stats },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
+        res.status(200).json({ message: 'Stats saved successfully.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error saving stats', error: error.toString() });
+        console.log(error);
+    }
+});
+
 app.get('/getStats', checkAuthenticated, async (req, res) => {
     try {
         const userStats = await UserStats.findOne({ userID: req.user.userID });
@@ -414,7 +434,7 @@ app.get('/search', (req, res) => {
     const searchName = req.query.name;
   
     const query = `
-      SELECT * FROM MagicItems
+      SELECT * FROM Items
       WHERE name LIKE ?
     `;
   
@@ -423,20 +443,58 @@ app.get('/search', (req, res) => {
       res.json(rows);
     });
 });
-app.post('/add-item', (req, res) => {
-    const { name, description, rarity } = req.body;
-    const attunement = req.body.attunement_required ? 1 : 0;
-  
-    const query = `
-      INSERT INTO MagicItems (name, description, rarity, attunement_required)
-      VALUES (?, ?, ?, ?)
+
+app.post('/add-weapon', (req, res) => {
+    const {
+        name,
+        description,
+        rarity,
+        damage,
+        attributes,
+        weapon_type,
+        properties,
+        item_value,
+        item_weight,
+        attunement_required
+    } = req.body;
+
+    const insertItem = `
+        INSERT INTO Items (name, description, rarity)
+        VALUES (?, ?, ?)
     `;
-    db.run(query, [name, description, rarity, attunement], function (err) {
-      if (err) {
-        console.error(err.message);
-        return res.status(500).send('Database error');
-      }
-      res.send(`<p>Item "${name}" added successfully!</p><a href="/">Add another</a>`);
+
+    db.run(insertItem, [name, description, rarity], function (err) {
+        if (err) {
+            console.error('Error inserting into Items:', err.message);
+            return res.status(500).send('Error creating base item.');
+        }
+
+        const itemId = this.lastID;
+
+        const insertWeapon = `
+            INSERT INTO Weapons (
+                item_id, damage, attributes, weapon_type, properties,
+                item_value, item_weight, attunement_required
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        db.run(insertWeapon, [
+            itemId,
+            damage,
+            attributes,
+            weapon_type,
+            properties,
+            parseInt(item_value),
+            parseInt(item_weight),
+            attunement_required ? 1 : 0
+        ], function (err) {
+            if (err) {
+                console.error('Error inserting into Weapons:', err.message);
+                return res.status(500).send('Error creating weapon.');
+            }
+
+            res.send(`<p>Weapon "${name}" added successfully!</p><a href="/">Add another</a>`);
+        });
     });
 });
 
@@ -444,7 +502,7 @@ app.get('/dndAdmin', (req, res) => {
     //res.sendFile(path.join(__dirname, 'views', 'adminPanel.html'));
     res.render('adminPanel.ejs', {
         csrfToken: req.csrfToken(),
-        name: req.user.name
+        //name: req.user.name
     });
     
 });
@@ -453,7 +511,6 @@ app.get('/dndCM', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'dndCM.html'));
 });
   
-
 app.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {
         console.warn('Invalid CSRF token');

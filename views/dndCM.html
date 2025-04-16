@@ -3,16 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <title>D&D Character Sheet</title>
-  <!--<link rel="stylesheet" href="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCM.css">-->
-  <link rel="stylesheet" href="\dndCMStyle.css">
+  <--<link rel="stylesheet" href="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCMStyle.css">-->
+  <!--<link rel="stylesheet" href="\dndCMStyle.css">-->
 </head>
 <body>
-
+  <header>
+    <form class="logo" action="/" method="GET">
+        <button type="submit">
+            <img src="images\tobyco-logo-4.png" alt="Logo" style="width: 250px; height: 250px;">
+        </button>
+    </form>
+    <nav class="navigation">
+        <form id="index-button" action="/" method="GET">
+            <button type="submit">Home</button>
+        </form>
+        <form id="falloutCM-button" action="/falloutCM" method="GET">
+          <button type="submit">Fallout Character Manager</button>
+      </form>
+        <form id="falloutGuide-button" action="/falloutGuide" method="GET">
+            <button type="submit">Website Guide</button>
+        </form>
+        <form id="logout-button" action="/logout" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit">Log Out</button>
+        </form>
+    </nav>
+</header>
   <div class="container">
 
     <!-- Character Info -->
     <div class="section">
-      <h1>Character Sheet</h1>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h1 style="margin: 0;">Character Sheet</h1>
+        <div>
+          <button onclick="saveCharacter()">💾 Save</button>
+          <button onclick="loadCharacter()">📂 Load</button>
+        </div>
+      </div>      
       <label>Name: <input type="text" name="characterName" value="Elaria Moonshadow"></label>
       <label>Level: <input type="number" name="level" value="5"></label>
       <label>XP: <input type="number" name="xp" value="6500"></label>
@@ -20,30 +47,83 @@
       <label>Race: <input type="text" name="race" value="Half-Elf"></label>
     </div>
 
-    <!-- Attributes -->
-    <div class="section">
-      <h2>Attributes</h2>
-      <div class="flex-wrap">
-        <div class="box"><label>Strength: <input type="number" name="strength" value="10"></label></div>
-        <div class="box"><label>Dexterity: <input type="number" name="dexterity" value="16"></label></div>
-        <div class="box"><label>Constitution: <input type="number" name="constitution" value="14"></label></div>
-        <div class="box"><label>Intelligence: <input type="number" name="intelligence" value="12"></label></div>
-        <div class="box"><label>Wisdom: <input type="number" name="wisdom" value="13"></label></div>
-        <div class="box"><label>Charisma: <input type="number" name="charisma" value="18"></label></div>
-      </div>
+    <!-- Attributes + Skills Combined -->
+<div class="section">
+  <h2>Attributes & Skills</h2>
+  <div class="flex-wrap">
+    <div class="box">
+      <label>Proficiency Bonus:
+        <input type="number" name="proficiencyBonus" id="proficiencyBonus" value="2" readonly>
+      </label>
+    </div>
+    <div class="box">
+      <label>Strength: <input type="number" name="strength" value="10"></label>
+      <div class="skill">Athletics: +<span id="athleticsMod">0</span> <input type="checkbox" name="athleticsProf"></div>
+    </div>
+    <div class="box">
+      <label>Dexterity: <input type="number" name="dexterity" value="16"></label>
+      <div class="skill">Acrobatics: +<span id="acrobaticsMod">0</span> <input type="checkbox" name="acrobaticsProf"></div>
+      <div class="skill">Sleight of Hand: +<span id="sleightMod">0</span> <input type="checkbox" name="sleightProf"></div>
+      <div class="skill">Stealth: +<span id="stealthMod">0</span> <input type="checkbox" name="stealthProf"></div>
     </div>
 
-    <!-- Skills -->
-    <div class="section">
-      <h2>Skills</h2>
-      <div class="flex-wrap">
-        <div class="box">Acrobatics (Dex): +<span id="acrobaticsMod">0</span> <input type="checkbox" name="acrobaticsProf"> ✔️</div>
-        <div class="box">Arcana (Int): +<span id="arcanaMod">0</span> <input type="checkbox" name="arcanaProf"></div>
-        <div class="box">Persuasion (Cha): +<span id="persuasionMod">0</span> <input type="checkbox" name="persuasionProf"> ✔️</div>
-        <div class="box">Stealth (Dex): +<span id="stealthMod">0</span> <input type="checkbox" name="stealthProf"></div>
-      </div>
+    <div class="box">
+      <label>Constitution: <input type="number" name="constitution" value="14"></label>
+      <!-- No direct skills for Constitution -->
     </div>
 
+    <div class="box">
+      <label>Intelligence: <input type="number" name="intelligence" value="12"></label>
+      <div class="skill">Arcana: +<span id="arcanaMod">0</span> <input type="checkbox" name="arcanaProf"></div>
+      <div class="skill">History: +<span id="historyMod">0</span> <input type="checkbox" name="historyProf"></div>
+      <div class="skill">Investigation: +<span id="investigationMod">0</span> <input type="checkbox" name="investigationProf"></div>
+      <div class="skill">Nature: +<span id="natureMod">0</span> <input type="checkbox" name="natureProf"></div>
+      <div class="skill">Religion: +<span id="religionMod">0</span> <input type="checkbox" name="religionProf"></div>
+    </div>
+
+    <div class="box">
+      <label>Wisdom: <input type="number" name="wisdom" value="13"></label>
+      <div class="skill">Animal Handling: +<span id="animalHandlingMod">0</span> <input type="checkbox" name="animalHandlingProf"></div>
+      <div class="skill">Insight: +<span id="insightMod">0</span> <input type="checkbox" name="insightProf"></div>
+      <div class="skill">Medicine: +<span id="medicineMod">0</span> <input type="checkbox" name="medicineProf"></div>
+      <div class="skill">Perception: +<span id="perceptionMod">0</span> <input type="checkbox" name="perceptionProf"></div>
+      <div class="skill">Survival: +<span id="survivalMod">0</span> <input type="checkbox" name="survivalProf"></div>
+    </div>
+
+    <div class="box">
+      <label>Charisma: <input type="number" name="charisma" value="18"></label>
+      <div class="skill">Deception: +<span id="deceptionMod">0</span> <input type="checkbox" name="deceptionProf"></div>
+      <div class="skill">Intimidation: +<span id="intimidationMod">0</span> <input type="checkbox" name="intimidationProf"></div>
+      <div class="skill">Persuasion: +<span id="persuasionMod">0</span> <input type="checkbox" name="persuasionProf"></div>
+      <div class="skill">Performance: +<span id="performanceMod">0</span> <input type="checkbox" name="performanceProf"></div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>Equipment Training & Proficiencies</h2>
+    <div class="flex-wrap">
+      <div class="box">
+        <label>Armor Proficiencies:<br>
+          <textarea name="armorProficiencies" rows="2" style="width:100%;">Light Armor, Medium Armor</textarea>
+        </label>
+      </div>
+      <div class="box">
+        <label>Weapon Proficiencies:<br>
+          <textarea name="weaponProficiencies" rows="2" style="width:100%;">Simple Weapons, Longswords, Rapiers</textarea>
+        </label>
+      </div>
+      <div class="box">
+        <label>Tool Proficiencies:<br>
+          <textarea name="toolProficiencies" rows="2" style="width:100%;">Lute, Disguise Kit</textarea>
+        </label>
+      </div>
+      <div class="box">
+        <label>Languages:<br>
+          <textarea name="languages" rows="2" style="width:100%;">Common, Elvish, Draconic</textarea>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
     <!-- Combat Stats -->
     <div class="section">
       <h2>Combat Stats</h2>
@@ -60,6 +140,25 @@
         <div class="box">
           <h3>Initiative</h3>
           <input type="number" name="initiative" value="3">
+        </div>
+        <div class="box">
+          <h3>Speed</h3>
+          <input type="text" name="speed" value="30 ft.">
+        </div>
+        <div class="box">
+          <h3>Size</h3>
+          <select name="size">
+            <option value="Tiny">Tiny</option>
+            <option value="Small">Small</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Large">Large</option>
+            <option value="Huge">Huge</option>
+            <option value="Gargantuan">Gargantuan</option>
+          </select>
+        </div>
+        <div class="box">
+          <h3>Passive Perception</h3>
+          <input type="number" name="passivePerception" id="passivePerception" value="11" readonly>
         </div>
       </div>
     </div>
@@ -106,13 +205,35 @@
       <h2>Inventory</h2>
       <p>Equipment, weapons, tools, and treasures.</p>
       <button onclick="openSearchModal()">Add Item to Inventory</button>
+      <div id="inventoryList" class="item-list">
+        <!-- Populated dynamically -->
+      </div>
     </div>    
     
     <div id="features" class="tab-content">
-      <h2>Features & Traits</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Features & Traits</h2>
+      </div>
+      <button onclick="openFeatureModal()">➕ Add Feature</button>
       <p>Class and racial features, feats, etc.</p>
+    
+      <div class="section">
+        <h3>Class Features</h3>
+        <ul id="classFeaturesList" class="feature-list"></ul>
+      </div>
+    
+      <div class="section">
+        <h3>Species Traits</h3>
+        <ul id="speciesTraitsList" class="feature-list"></ul>
+      </div>
+    
+      <div class="section">
+        <h3>Feats</h3>
+        <ul id="featsList" class="feature-list"></ul>
+      </div>
     </div>
-
+    
+    
     <div id="background" class="tab-content">
       <h2>Background</h2>
       <p>Your character’s story and background traits.</p>
@@ -145,7 +266,39 @@
     <div id="searchResults" style="margin-top: 20px;"></div>
   </div>
 </div>
-<!--<script src="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCM.js"></script>-->
-<script src="\dndCMScripts.js"></script>
+
+<!-- Add Feature Modal -->
+<div id="featureModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeFeatureModal()">&times;</span>
+    <h3>Add New Feature</h3>
+    <form id="featureForm" onsubmit="submitFeature(event)">
+      <label>
+        Feature Type:<br>
+        <select name="featureType" required>
+          <option value="Class">Class</option>
+          <option value="Species">Species</option>
+          <option value="Background">Background</option>
+          <option value="Feat">Feat</option>
+        </select>
+      </label><br><br>
+
+      <label>
+        Feature Name:<br>
+        <input type="text" name="featureName" required style="width: 100%;">
+      </label><br><br>
+
+      <label>
+        Description:<br>
+        <textarea name="featureDescription" rows="4" style="width: 100%;" required></textarea>
+      </label><br><br>
+
+      <button type="submit">Add Feature</button>
+    </form>
+  </div>
+</div>
+
+<--<script src="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCMScripts.js"></script>-->
+<!--<script src="\dndCMScripts.js"></script>-->
 </body>
 </html>
