@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>D&D Character Sheet</title>
-  <--<link rel="stylesheet" href="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCMStyle.css">-->
-  <!--<link rel="stylesheet" href="\dndCMStyle.css">-->
+  <!--<link rel="stylesheet" href="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCMStyle.css">-->
+  <--<link rel="stylesheet" href="\dndCMStyle.css">-->
 </head>
 <body>
   <header>
@@ -197,24 +197,32 @@
     </div>
 
     <div id="spells" class="tab-content">
-      <h2>Spells</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Spells <button onclick="openSpellModal()">➕</button></h2>
+      </div>
       <p>Your spellbook goes here.</p>
+    
+      <!-- Cantrips always visible -->
+      <div class="section">
+        <h3>Cantrips</h3>
+        <ul id="spellsLevel0" class="feature-list"></ul>
+      </div>
+    
+      <!-- All leveled spell sections will be dynamically created below -->
+      <div id="spellSections"></div>
     </div>
 
     <div id="inventory" class="tab-content">
       <h2>Inventory</h2>
       <p>Equipment, weapons, tools, and treasures.</p>
-      <button onclick="openSearchModal()">Add Item to Inventory</button>
-      <div id="inventoryList" class="item-list">
+      <button onclick="openAddItemModal()">Add Item to Inventory</button>
+      <ul id="inventoryList" class="feature-list" style="margin-top: 20px;"></ul>
         <!-- Populated dynamically -->
       </div>
     </div>    
     
     <div id="features" class="tab-content">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2>Features & Traits</h2>
-      </div>
-      <button onclick="openFeatureModal()">➕ Add Feature</button>
+      <h2>Features & Traits <button onclick="openFeatureModal()">➕</button></h2>
       <p>Class and racial features, feats, etc.</p>
     
       <div class="section">
@@ -235,13 +243,96 @@
     
     
     <div id="background" class="tab-content">
-      <h2>Background</h2>
+      <h2>Background <button onclick="openBackgroundModal()">➕</button></h2>
       <p>Your character’s story and background traits.</p>
+    
+      <!-- Add Background Feature -->
+      <ul id="backgroundFeatureList" class="feature-list"></ul>
+    
+      <!-- Character Characteristics -->
+      <div class="section">
+        <h3>Character Characteristics</h3>
+        <div class="flex-wrap">
+          <div class="box">
+            <label>Alignment:<br>
+              <select name="alignment">
+                <option value="">-- Select Alignment --</option>
+                <option>Lawful Good</option>
+                <option>Chaotic Good</option>
+                <option>Lawful Neutral</option>
+                <option>Neutral Good</option>
+                <option>True Neutral</option>
+                <option>Neutral Evil</option>
+                <option>Chaotic Neutral</option>
+                <option>Lawful Evil</option>
+                <option>Chaotic Evil</option>
+              </select>
+            </label>
+          </div>
+          <div class="box"><label>Gender:<br><input type="text" name="gender"></label></div>
+          <div class="box"><label>Eyes:<br><input type="text" name="eyes"></label></div>
+          <div class="box"><label>Size:<br>
+            <select name="charSize">
+              <option>Tiny</option>
+              <option>Small</option>
+              <option selected>Medium</option>
+              <option>Large</option>
+              <option>Huge</option>
+              <option>Gargantuan</option>
+            </select>
+          </label></div>
+          <div class="box"><label>Height:<br><input type="text" name="height"></label></div>
+          <div class="box"><label>Faith:<br><input type="text" name="faith"></label></div>
+          <div class="box"><label>Hair Color:<br><input type="text" name="hair"></label></div>
+          <div class="box"><label>Skin:<br><input type="text" name="skin"></label></div>
+          <div class="box"><label>Age:<br><input type="number" name="age"></label></div>
+          <div class="box"><label>Weight:<br><input type="text" name="weight"></label></div>
+        </div>
+      </div>
+    
+      <!-- Personality Traits -->
+      <div class="section">
+        <h3>Personality Traits <button onclick="openPersonalityModal()">➕</button></h3>
+        <ul id="personalityTraitList" class="feature-list"></ul>
+      </div>
+    
+      <!-- Appearance Details -->
+      <div class="section">
+        <h3>Appearance Details <button onclick="openAppearanceModal()">➕</button></h3>
+        <ul id="appearanceDetailList" class="feature-list"></ul>
+      </div>
     </div>
 
-    <div id="notes" class="tab-content">
-      <h2>Notes</h2>
+    <div id="notes" class="tab-content"> 
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Notes <button onclick="openNotesModal()">➕</button></h2>
+      </div>
       <p>Player or DM notes, session details, reminders.</p>
+    
+      <div class="section">
+        <h3>Organizations</h3>
+        <ul id="notesOrganizations" class="feature-list"></ul>
+      </div>
+    
+      <div class="section">
+        <h3>Allies</h3>
+        <ul id="notesAllies" class="feature-list"></ul>
+      </div>
+    
+      <div class="section">
+        <h3>Enemies</h3>
+        <ul id="notesEnemies" class="feature-list"></ul>
+      </div>
+    
+      <div class="section">
+        <h3>Backstory</h3>
+        <ul id="notesBackstory" class="feature-list"></ul>
+      </div>
+    
+      <div class="section">
+        <h3>Other</h3>
+        <ul id="notesOther" class="feature-list"></ul>
+      </div>
     </div>
 
     <div id="extras" class="tab-content">
@@ -252,11 +343,11 @@
   </div>
 
 <!-- Item Search Modal -->
-<div id="searchModal" class="modal">
+<div id="addItemModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeSearchModal()">&times;</span>
-    <h3>Search Magic Item</h3>
-    <form id="searchForm">
+    <span class="close" onclick="closeAddItemModal()">&times;</span>
+    <h3>Search Items</h3>
+    <form id="addItemForm">
       <label>Item Name:<br>
         <input type="text" name="searchQuery" required>
       </label><br><br>
@@ -278,7 +369,6 @@
         <select name="featureType" required>
           <option value="Class">Class</option>
           <option value="Species">Species</option>
-          <option value="Background">Background</option>
           <option value="Feat">Feat</option>
         </select>
       </label><br><br>
@@ -298,7 +388,222 @@
   </div>
 </div>
 
-<--<script src="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCMScripts.js"></script>-->
-<!--<script src="\dndCMScripts.js"></script>-->
+<!-- Background Feature Modal -->
+<div id="backgroundFeatureModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeBackgroundFeatureModal()">&times;</span>
+    <h3>Add Background Feature</h3>
+    <form onsubmit="submitBackgroundFeature(event)">
+      <label>Name:<br><input type="text" name="backgroundFeatureName" required></label><br><br>
+      <label>Description:<br><textarea name="backgroundFeatureDesc" rows="4" style="width: 100%;" required></textarea></label><br><br>
+      <button type="submit">Add Feature</button>
+    </form>
+  </div>
+</div>
+
+<!-- Personality Trait Modal -->
+<div id="personalityModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closePersonalityModal()">&times;</span>
+    <h3>Add Personality Trait</h3>
+    <form onsubmit="submitPersonalityTrait(event)">
+      <label>Name:<br><input type="text" name="personalityTraitName" required></label><br><br>
+      <label>Trait:<br><textarea name="personalityTrait" rows="3" style="width: 100%;" required></textarea></label><br><br>
+      <button type="submit">Add Trait</button>
+    </form>
+  </div>
+</div>
+
+<!-- Appearance Detail Modal -->
+<div id="appearanceModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeAppearanceModal()">&times;</span>
+    <h3>Add Appearance Detail</h3>
+    <form onsubmit="submitAppearanceDetail(event)">
+      <label>Name:<br><input type="text" name="appearanceDetailName" required></label><br><br>
+      <label>Detail:<br><textarea name="appearanceDetail" rows="3" style="width: 100%;" required></textarea></label><br><br>
+      <button type="submit">Add Detail</button>
+    </form>
+  </div>
+</div>
+
+<!-- Notes Modal -->
+<div id="notesModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeNotesModal()">&times;</span>
+    <h3>Add Note</h3>
+    <form onsubmit="submitNote(event)">
+      <label>
+        Note Type:<br>
+        <select name="noteType" required>
+          <option value="Organizations">Organizations</option>
+          <option value="Allies">Allies</option>
+          <option value="Enemies">Enemies</option>
+          <option value="Backstory">Backstory</option>
+          <option value="Other">Other</option>
+        </select>
+      </label><br><br>
+
+      <label>
+        Note Content:<br>
+        <textarea name="noteContent" rows="4" style="width: 100%;" required></textarea>
+      </label><br><br>
+
+      <button type="submit">Add Note</button>
+    </form>
+  </div>
+</div>
+
+<!-- Add Spell Modal -->
+<div id="spellModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeSpellModal()">&times;</span>
+    <h3>Add Spell</h3>
+    <form onsubmit="submitSpell(event)">
+      
+      <label>Spell Name:<br>
+        <input type="text" name="spellName" required>
+      </label><br><br>
+
+      <label>Spell Level:<br>
+        <select name="spellLevel" required>
+          <option value="0">Cantrip</option>
+          <option value="1">Level 1</option>
+          <option value="2">Level 2</option>
+          <option value="3">Level 3</option>
+          <option value="4">Level 4</option>
+          <option value="5">Level 5</option>
+          <option value="6">Level 6</option>
+          <option value="7">Level 7</option>
+          <option value="8">Level 8</option>
+          <option value="9">Level 9</option>
+        </select>
+      </label><br><br>
+
+      <label>Casting Type:<br>
+        <select name="castingType">
+          <option>Prepared</option>
+          <option>Innate</option>
+          <option>At Will</option>
+          <option>Pact Magic</option>
+        </select>
+      </label><br><br>
+      <div id="atWillOptions" style="display: none; margin-top: 10px;">
+
+        <label>Source of Spell:<br>
+          <input type="text" name="sourceOfSpell" placeholder="e.g., Wand of Magic Missile, Circlet of Blasting">
+        </label><br><br>
+      
+        <label>Use Limit:<br>
+          <select name="useLimit" onchange="toggleUseCountField()">
+            <option value="infinite">Infinite</option>
+            <option value="finite">Finite</option>
+            <option value="perDay">Per Day</option>
+          </select>
+          <span id="useCountWrapper" style="margin-left: 10px; display: none;">
+            Uses: <input type="number" name="useCount" min="1" style="width: 60px;" value="1">
+          </span>
+        </label>
+      
+      </div>
+
+      <label>School of Magic:<br>
+        <select name="school">
+          <option>Abjuration</option>
+          <option>Conjuration</option>
+          <option>Divination</option>
+          <option>Enchantment</option>
+          <option>Evocation</option>
+          <option>Illusion</option>
+          <option>Necromancy</option>
+          <option>Transmutation</option>
+        </select>
+      </label><br><br>
+
+      <fieldset style="border: 1px solid #555; padding: 10px; border-radius: 6px;">
+        <legend>Components:</legend>
+        <label><input type="checkbox" name="components" value="Verbal"> Verbal</label><br>
+        <label><input type="checkbox" name="components" value="Somatic"> Somatic</label><br>
+        <label><input type="checkbox" name="components" value="Material"> Material</label>
+      </fieldset><br>
+
+      <label><input type="checkbox" name="isPrepared"> Spell is currently prepared</label><br><br>
+
+      <label>Activation Cost:<br>
+        <select name="activationCost">
+          <option>Action</option>
+          <option>Bonus Action</option>
+          <option>Reaction</option>
+        </select>
+      </label><br><br>
+
+      <label>Action Type:<br>
+        <select name="actionType">
+          <option>Melee Spell Attack</option>
+          <option>Ranged Spell Attack</option>
+          <option>Melee Weapon Attack</option>
+          <option>Ranged Weapon Attack</option>
+          <option>Saving Throw</option>
+          <option>Healing</option>
+          <option>Ability Check</option>
+          <option>Utility</option>
+        </select>
+      </label><br><br>
+
+      <div id="attackDetails" style="display: none; margin-top: 10px;">
+
+        <label>Attribute Used:<br>
+          <select name="attackAttribute">
+            <option value="">-- Select Attribute --</option>
+            <option value="Strength">Strength</option>
+            <option value="Dexterity">Dexterity</option>
+            <option value="Constitution">Constitution</option>
+            <option value="Intelligence">Intelligence</option>
+            <option value="Wisdom">Wisdom</option>
+            <option value="Charisma">Charisma</option>
+          </select>
+        </label><br><br>
+      
+        <label>Number of Attacks:<br>
+          <input type="number" name="numberOfAttacks" min="1" value="1" style="width: 60px;">
+        </label>
+      
+      </div>
+
+      <label>Level Scaling:<br>
+        <select name="scalingDice">
+          <option value="">None</option>
+          <option value="d4">d4</option>
+          <option value="d6">d6</option>
+          <option value="d8">d8</option>
+          <option value="d10">d10</option>
+          <option value="d12">d12</option>
+        </select>
+        × <input type="number" name="scalingDiceCount" min="1" style="width: 60px;" placeholder="0">
+      </label><br><br>
+
+      <label>Description:<br>
+        <textarea name="spellDescription" rows="4" style="width: 100%;"></textarea>
+      </label><br><br>
+
+      <button type="submit">Add Spell</button>
+    </form>
+    <div id="delete-container" style="text-align: right; margin-top: 10px;">
+      <button type="button" id="deleteSpellButton" onclick="deleteSpell()" style="
+        background-color: #8b0000;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        display: none;
+      ">🗑️ Delete Spell</button>
+  </div>
+  </div>
+</div>
+
+
+<!--<script src="S:\WEBsites\2BDungeon5.0_Now_With_DND\public\dndCMScripts.js"></script>-->
+<--<script src="\dndCMScripts.js"></script>-->
 </body>
 </html>

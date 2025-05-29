@@ -1,0 +1,6 @@
+required information for spells
+
+effect = ranged attack, melee attack, ability check attack, heal, utility effect
+
+num. of attacks
+

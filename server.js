@@ -290,7 +290,7 @@ app.post('/saveStats', checkAuthenticated, async (req, res) => {
     }
 });
 
-app.post('saveStatsDND', checkAuthenticated, async(req, res)=>{
+app.post('/saveStatsDND', checkAuthenticated, async(req, res)=>{
     console.log(req.headers['_csrf'])
     const stats = req.body.stats;
     const userID = req.user.userID;
@@ -507,7 +507,7 @@ app.get('/dndAdmin', (req, res) => {
     
 });
 
-app.get('/dndCM', (req, res) => {
+app.get('/dndCM', (req, res) => { //readd auth check
     res.sendFile(path.join(__dirname, 'views', 'dndCM.html'));
 });
   
